@@ -1,4 +1,4 @@
-name: 毎朝LINEに投稿ネタを送る
+name: LINE notify
 
 on:
   schedule:
@@ -8,20 +8,23 @@ on:
 jobs:
   send-line-message:
     runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+      LANG: ja_JP.UTF-8
 
     steps:
-      - name: リポジトリを取得
-        uses: actions/checkout@v3
+      - name: checkout
+        uses: actions/checkout@v4
 
-      - name: Pythonをセットアップ
-        uses: actions/setup-python@v4
+      - name: setup python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: ライブラリをインストール
-        run: pip install -r requirements.txt
+      - name: install
+        run: pip install requests feedparser
 
-      - name: LINEに通知を送る
+      - name: send
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
